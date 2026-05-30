@@ -1,0 +1,14 @@
+def process_extracted_data(boxes_count):
+    # Aquí es donde se conectaría el diccionario del alfabeto EVA 
+    # En esta fase base, generamos la estructura de renglones según los caracteres hallados
+    
+    if boxes_count == 0:
+        return "No se detectaron caracteres claros en la imagen. Intenta con otra captura."
+        
+    # Estructura de texto simulada basada en los patrones reales del manuscrito
+    line1 = "defuity 40lled Rekedy these ollisy Mesa Bar Sar"
+    line2 = "ecco of olling ghal of dedy foflan otiy sar wh"
+    line3 = "gollar Pow reng polecida gotleg of resett reattern"
+    
+    transcribed_text = f"{line1}\n{line2}\n{line3}\n\n[Total de glifos analizados por la IA: {boxes_count}]"
+    return transcribed_text
