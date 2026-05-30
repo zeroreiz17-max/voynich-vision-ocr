@@ -1,0 +1,27 @@
+import cv2
+import numpy as np
+
+def extract_characters(image_bytes):
+    # 1. Convertir los bytes de la imagen subida a un formato que OpenCV entienda
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    # 2. Pasarlo a escala de grises
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # 3. Aplicar un filtro (Threshold) para separar las letras oscuras del fondo claro
+    _, thresh = cv2.threshold(gray, 120, 255, cv2.THRESH_BINARY_INV)
+    
+    # 4. Encontrar las coordenadas de cada símbolo individual
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    detected_boxes = []
+    for cnt in contours:
+        x, y, w, h = cv2.boundingRect(cnt)
+        # Filtro básico para ignorar manchas o ruido diminuto en la página
+        if w > 4 and h > 4:
+            detected_boxes.append((x, y, w, h))
+            
+    # Ordena las cajas de arriba a abajo y de izquierda a derecha (como leemos nosotros)
+    detected_boxes = sorted(detected_boxes, key=lambda b: (b[1] // 10, b[0]))
+    return detected_boxes
